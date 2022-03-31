@@ -1,9 +1,13 @@
 from subprocess import Popen, PIPE, STDOUT
+from stackapi import StackAPI, StackAPIError
+from datetime import date
+import requests
+import json
 
 
 filePath = ' /Users/thomasfosen/Documents/Prosjekter/autoError/Auto-Search-Error-/error.py'
 
-errorLibrary = ['NameError', 'IndexError', 'KeyError','IndentationError', 'TypeError', 'ValueError', 'ModuleNotFoundError']
+errorLibrary = ['NameError', 'IndexError', 'KeyError','IndentationError', 'TypeError', 'ValueError', 'ModuleNotFoundError', 'AttributeError']
 
 process = Popen('python3' + filePath , stdout = PIPE, stderr = STDOUT, shell = True)
 stdout, stderr = process.communicate()
@@ -22,9 +26,46 @@ def checkOutput():
                 return i, index
 
 errorType, index = checkOutput()
-
-
-errorMessage = logList[index:]
 errorMessage = ' '.join(logList[index:])
 
-print(errorType, errorMessage)
+#print(errorType, errorMessage)
+
+
+''' StackAPI '''
+
+site = StackAPI('stackoverflow')
+
+
+listOfDicts = site.fetch('questions', min = 20, tagged = errorType, sort = 'votes',
+fromdate = 1457136000, todate = date.today(), page_size = 1, max_pages = 1, accepted = True)
+
+
+parameters = {
+    'min' : 20,
+    'tagged' : errorType,
+    'sort' : 'votes',
+    'fromdate' : 1457136000,
+    'todate' : date.today(),
+    'page_size' : 1,
+    'max_pages' : 1,
+    'accepted' : True
+}
+
+response = requests.get('https://api.stackexchange.com/docs/advanced-search', params = parameters)
+
+def jprint(obj):
+    # create a formatted string of the Python JSON object
+    text = json.dumps(obj, sort_keys=True, indent=4)
+    print(text)
+
+jprint(response.json())
+
+
+'''
+def get_value(listOfDicts, key):
+    for subVal in listOfDicts:
+        if key in subVal:
+            return subVal[key]
+
+result = get_value(listOfDicts, 'backoff')
+'''
