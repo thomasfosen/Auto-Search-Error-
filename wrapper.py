@@ -7,14 +7,12 @@ import webbrowser
 
 
 filePath = ' /Users/thomasfosen/Documents/Prosjekter/autoError/Auto-Search-Error-/error.py'
-
 errorLibrary = ['NameError', 'IndexError', 'KeyError','IndentationError', 'TypeError', 'ValueError', 'ModuleNotFoundError', 'AttributeError']
 
 process = Popen('python3' + filePath , stdout = PIPE, stderr = STDOUT, shell = True)
 stdout, stderr = process.communicate()
 
 consoleMessage = stdout.decode('utf-8')
-
 logList = consoleMessage.split()
 
 
@@ -28,7 +26,6 @@ def checkOutput():
 
 errorType, index = checkOutput()
 errorMessage = ' '.join(logList[index:])
-
 error = errorType + ' ' + errorMessage
 
 print(error)
@@ -37,9 +34,7 @@ print(error)
 ''' StackAPI '''
 
 site = StackAPI('stackoverflow')
-
 response = requests.get('https://api.stackexchange.com/2.3/search/advanced?page=1&pagesize=5&order=desc&sort=activity&accepted=True&tagged=python&title='+error+'&site=stackoverflow')
-
 items = response.json() # dict
 
 
