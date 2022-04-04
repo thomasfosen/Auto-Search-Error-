@@ -28,14 +28,16 @@ def checkOutput():
 errorType, index = checkOutput()
 errorMessage = ' '.join(logList[index:])
 
-#print(errorType, errorMessage)
+error = errorType + ' ' + errorMessage
+
+print(error)
 
 
 ''' StackAPI '''
 
 site = StackAPI('stackoverflow')
 
-
+'''
 listOfDicts = site.fetch('questions', min = 20, tagged = errorType, sort = 'votes',
 fromdate = 1457136000, todate = date.today(), page_size = 1, max_pages = 1, accepted = True)
 
@@ -50,16 +52,21 @@ parameters = {
     'max_pages' : 1,
     'accepted' : True
 }
+'''
 
-response = requests.get('https://api.stackexchange.com/docs/advanced-search', params = parameters)
+response = requests.get('https://api.stackexchange.com/2.3/search/advanced?page=1&pagesize=1&order=desc&sort=activity&accepted=True&tagged=python&title='+error+'&site=stackoverflow')
 
+test = response.json()
+
+print(test)
+'''
 def jprint(obj):
     # create a formatted string of the Python JSON object
     text = json.dumps(obj, sort_keys=True, indent=4)
     print(text)
 
 jprint(response.json())
-
+'''
 
 '''
 def get_value(listOfDicts, key):
