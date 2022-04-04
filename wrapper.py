@@ -3,6 +3,7 @@ from stackapi import StackAPI, StackAPIError
 from datetime import date
 import requests
 import json
+import webbrowser
 
 
 filePath = ' /Users/thomasfosen/Documents/Prosjekter/autoError/Auto-Search-Error-/error.py'
@@ -39,13 +40,8 @@ site = StackAPI('stackoverflow')
 
 response = requests.get('https://api.stackexchange.com/2.3/search/advanced?page=1&pagesize=5&order=desc&sort=activity&accepted=True&tagged=python&title='+error+'&site=stackoverflow')
 
-items = response.json()
-
-test = json.dumps(items, indent=4)
-
-#print(test)
+items = response.json() # dict
 
 
-def extractURL():
-    for item in items:
-        print(item)    # Vil bare ha posts med svar
+for item in items['items']:
+    webbrowser.open(item['link'], new = 2) # åpner ny tab i default browser
