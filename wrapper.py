@@ -20,7 +20,7 @@ logList = consoleMessage.split()
 def checkOutput():
     index = 0
     for i in logList:
-        index = index + 1
+        index += 1
         for j in errorLibrary:
             if(i == j + ':'):
                 return i, index
@@ -37,42 +37,15 @@ print(error)
 
 site = StackAPI('stackoverflow')
 
-'''
-listOfDicts = site.fetch('questions', min = 20, tagged = errorType, sort = 'votes',
-fromdate = 1457136000, todate = date.today(), page_size = 1, max_pages = 1, accepted = True)
+response = requests.get('https://api.stackexchange.com/2.3/search/advanced?page=1&pagesize=5&order=desc&sort=activity&accepted=True&tagged=python&title='+error+'&site=stackoverflow')
+
+items = response.json()
+
+test = json.dumps(items, indent=4)
+
+#print(test)
 
 
-parameters = {
-    'min' : 20,
-    'tagged' : errorType,
-    'sort' : 'votes',
-    'fromdate' : 1457136000,
-    'todate' : date.today(),
-    'page_size' : 1,
-    'max_pages' : 1,
-    'accepted' : True
-}
-'''
-
-response = requests.get('https://api.stackexchange.com/2.3/search/advanced?page=1&pagesize=1&order=desc&sort=activity&accepted=True&tagged=python&title='+error+'&site=stackoverflow')
-
-test = response.json()
-
-print(test)
-'''
-def jprint(obj):
-    # create a formatted string of the Python JSON object
-    text = json.dumps(obj, sort_keys=True, indent=4)
-    print(text)
-
-jprint(response.json())
-'''
-
-'''
-def get_value(listOfDicts, key):
-    for subVal in listOfDicts:
-        if key in subVal:
-            return subVal[key]
-
-result = get_value(listOfDicts, 'backoff')
-'''
+def extractURL():
+    for item in items:
+        print(item)    # Vil bare ha posts med svar
